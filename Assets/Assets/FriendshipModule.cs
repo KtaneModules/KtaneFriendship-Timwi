@@ -19,6 +19,11 @@ public class FriendshipModule : MonoBehaviour
     public GameObject FsScreen;
     public Mesh PlaneMesh;
 
+    public TextMesh[] ElementsOfHarmony;
+    public KMSelectable UpBtn;
+    public KMSelectable DownBtn;
+    public KMSelectable SubmitBtn;
+
     static string[] _ponyNames = new[] {
             "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh",
             "Bulk Biceps", "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee",
@@ -178,6 +183,9 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
         Debug.LogFormat("Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[correctElementOfHarmony]);
 
+        for (int i = 0; i < 7; i++)
+            ElementsOfHarmony[i].text = _elementsOfHarmony[displayedElementsOfHarmony[i]];
+
         // Create the GameObjects to display the friendship symbols on the module.
         foreach (var friendshipSymbol in friendshipSymbols)
         {
@@ -197,5 +205,9 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     void ActivateModule()
     {
+        SubmitBtn.OnHighlight += delegate { Debug.Log("OnHighlight"); };
+        SubmitBtn.OnLeft += delegate { Debug.Log("OnLeft"); };
+        SubmitBtn.OnSelect += delegate { Debug.Log("OnSelect"); };
+        SubmitBtn.OnInteract += delegate { Module.HandlePass(); return false; };
     }
 }
