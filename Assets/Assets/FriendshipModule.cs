@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -17,12 +19,21 @@ public class FriendshipModule : MonoBehaviour
     public KMAudio Audio;
 
     public GameObject FsScreen;
+    public GameObject FsCylinder;
     public Mesh PlaneMesh;
 
     public TextMesh[] ElementsOfHarmony;
     public KMSelectable UpBtn;
     public KMSelectable DownBtn;
     public KMSelectable SubmitBtn;
+
+    private int _correctElementOfHarmony;
+    private int _selectedElementOfHarmony = 0;
+    private bool _isCoroutineRunning = false;
+    private bool _isCylinderMovingUp;
+    private int[] _displayedElementsOfHarmony;
+    private Quaternion[] _cylinderRotations;
+    private int _rotationAnimationSteps;
 
     static string[] _ponyNames = new[] {
             "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh",
@@ -39,6 +50,12 @@ public class FriendshipModule : MonoBehaviour
             "Consideration", "Courage", "Fairness", "Flexibility", "Generosity", "Helpfulness", "Honesty",
             "Inspiration", "Kindness", "Laughter", "Love", "Loyalty", "Open-mindedness", "Patience",
             "Resoluteness", "Selflessness", "Sincerity", "Solidarity", "Support", "Sympathy", "Thoughtfulness" };
+
+    static float[] _elementsOfHarmonyScaleX = new[] {
+        .00125f, .00125f, .00125f, .00125f, .00110f, .00125f, .00095f,
+        .00120f, .00125f, .00125f, .00125f, .00125f, .00125f, .00125f,
+        .00125f, .00125f, .00125f, .00125f, .00125f, .00095f, .00125f,
+        .00125f, .00125f, .00125f, .00125f, .00125f, .00125f, .00105f };
 
     static int[][] _grid = new[] {
             new[] { 8, 6, 18, 9, 19, 26, 10, 2, 7, 24, 20, 13, 11, 15 },
@@ -156,17 +173,18 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
         var disregardCol = friendshipSymbols.Where(s => !s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.X == s.X)).OrderBy(s => s.X).FirstOrDefault();
         if (disregardCol == null)
             goto tryAgain;
-        Debug.LogFormat("Disregard column symbol: {0}", _ponyNames[disregardCol.Symbol]);
+        Debug.LogFormat("Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray()));
 
         var disregardRow = friendshipSymbols.Where(s => s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.Y == s.Y)).OrderByDescending(s => s.Y).FirstOrDefault();
         if (disregardRow == null)
             goto tryAgain;
-        Debug.LogFormat("Disregard row symbol: {0}", _ponyNames[disregardRow.Symbol]);
+        Debug.LogFormat("Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray()));
 
         // Which Elements of Harmony are at the intersections of the remaining columns and rows?
         var deducedElementsOfHarmony =
             friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).SelectMany(cs =>
             friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(rs => _grid[rs.RowOrCol][cs.RowOrCol])).ToArray();
+        Debug.Log("The potential Elements of Harmony are: " + string.Join(", ", deducedElementsOfHarmony.Select(ix => _elementsOfHarmony[ix]).ToArray()));
 
         // On the bomb, display 6 wrong Elements of Harmony...
         var displayedElementsOfHarmony = new List<int>();
@@ -178,13 +196,20 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
             availableElementsOfHarmony.RemoveAt(ix);
         }
         // ... plus one of the correct ones in a random place
-        var correctElementOfHarmony = deducedElementsOfHarmony[Rnd.Range(0, 4)];
-        displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), correctElementOfHarmony);
+        _correctElementOfHarmony = deducedElementsOfHarmony[Rnd.Range(0, 4)];
+        displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), _correctElementOfHarmony);
+        _displayedElementsOfHarmony = displayedElementsOfHarmony.ToArray();
 
-        Debug.LogFormat("Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[correctElementOfHarmony]);
+        if (!displayedElementsOfHarmony.Contains(Array.IndexOf(_elementsOfHarmony, "Open-mindedness")))
+            goto tryAgain;
+
+        Debug.LogFormat("Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[_correctElementOfHarmony]);
 
         for (int i = 0; i < 7; i++)
-            ElementsOfHarmony[i].text = _elementsOfHarmony[displayedElementsOfHarmony[i]];
+        {
+            ElementsOfHarmony[i].text = _elementsOfHarmony[_displayedElementsOfHarmony[i]];
+            ElementsOfHarmony[i].transform.localScale = new Vector3(_elementsOfHarmonyScaleX[_displayedElementsOfHarmony[i]], .00125f, .00125f);
+        }
 
         // Create the GameObjects to display the friendship symbols on the module.
         foreach (var friendshipSymbol in friendshipSymbols)
@@ -201,14 +226,59 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
             mr.material.mainTexture = tex;
             mr.material.shader = Shader.Find("Unlit/Transparent");
         }
+
+        SubmitBtn.OnInteract += delegate { handleSubmit(); return false; };
+        UpBtn.OnInteract += delegate { go(up: true); return false; };
+        DownBtn.OnInteract += delegate { go(up: false); return false; };
+
+        _cylinderRotations = new Quaternion[7];
+        for (int i = 0; i < 7; i++)
+        {
+            _cylinderRotations[i] = FsCylinder.transform.localRotation;
+            FsCylinder.transform.Rotate(new Vector3(360f / 7, 0, 0));
+        }
+        FsCylinder.transform.localRotation = _cylinderRotations[0];
     }
 
     void ActivateModule()
     {
         Debug.Log("Friendship Activated");
-        SubmitBtn.OnHighlight += delegate { Debug.Log("OnHighlight"); };
-        SubmitBtn.OnLeft += delegate { Debug.Log("OnLeft"); };
-        SubmitBtn.OnSelect += delegate { Debug.Log("OnSelect"); };
-        SubmitBtn.OnInteract += delegate { Module.HandlePass(); return false; };
+    }
+
+    private void go(bool up)
+    {
+        _selectedElementOfHarmony = (_selectedElementOfHarmony + (up ? 6 : 1)) % 7;
+        _rotationAnimationSteps = 30;
+
+        if (!_isCoroutineRunning)
+        {
+            _isCoroutineRunning = true;
+            StartCoroutine(cylinderRotation());
+        }
+    }
+
+    private IEnumerator cylinderRotation()
+    {
+        while (true)
+        {
+            if (--_rotationAnimationSteps == 0)
+            {
+                FsCylinder.transform.localRotation = _cylinderRotations[_selectedElementOfHarmony];
+                _isCoroutineRunning = false;
+                yield break;
+            }
+
+            FsCylinder.transform.localRotation = Quaternion.Slerp(FsCylinder.transform.localRotation, _cylinderRotations[_selectedElementOfHarmony], .25f);
+            yield return null;
+        }
+    }
+
+    private void handleSubmit()
+    {
+        Debug.LogFormat("You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
+        if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == _correctElementOfHarmony)
+            Module.HandlePass();
+        else
+            Module.HandleStrike();
     }
 }
