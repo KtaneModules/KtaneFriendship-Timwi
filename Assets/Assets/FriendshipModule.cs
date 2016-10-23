@@ -205,6 +205,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     void ActivateModule()
     {
+        Debug.Log("Friendship Activated");
         SubmitBtn.OnHighlight += delegate { Debug.Log("OnHighlight"); };
         SubmitBtn.OnLeft += delegate { Debug.Log("OnLeft"); };
         SubmitBtn.OnSelect += delegate { Debug.Log("OnSelect"); };
