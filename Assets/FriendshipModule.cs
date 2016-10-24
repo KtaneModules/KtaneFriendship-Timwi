@@ -12,9 +12,7 @@ using Rnd = UnityEngine.Random;
 /// </summary>
 public class FriendshipModule : MonoBehaviour
 {
-    public KMBombInfo Bomb;
     public KMBombModule Module;
-    public KMSelectable Selectable;
     public KMAudio Audio;
 
     public GameObject FsScreen;
@@ -22,9 +20,9 @@ public class FriendshipModule : MonoBehaviour
     public Mesh PlaneMesh;
 
     public TextMesh[] ElementsOfHarmony;
-    public KMSelectable UpBtn;
-    public KMSelectable DownBtn;
-    public KMSelectable SubmitBtn;
+    public KMSelectable BtnUp;
+    public KMSelectable BtnDown;
+    public KMSelectable BtnSubmit;
 
     private int _correctElementOfHarmony;
     private int _selectedElementOfHarmony = 0;
@@ -210,7 +208,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
         // Create the GameObjects to display the friendship symbols on the module.
         foreach (var friendshipSymbol in friendshipSymbols)
         {
-            var graphic = new GameObject();
+            var graphic = new GameObject { name = _ponyNames[friendshipSymbol.Symbol] };
             graphic.transform.parent = FsScreen.transform;
             graphic.transform.localPosition = new Vector3(friendshipSymbol.X * .029f / 3 - .072f, 0.0001f, friendshipSymbol.Y * .029f / 3 - .024f);
             graphic.transform.localRotation = new Quaternion(0, 180, 0, 1);
@@ -223,9 +221,9 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
             mr.material.shader = Shader.Find("Unlit/Transparent");
         }
 
-        SubmitBtn.OnInteract += delegate { handleSubmit(); return false; };
-        UpBtn.OnInteract += delegate { go(up: true); return false; };
-        DownBtn.OnInteract += delegate { go(up: false); return false; };
+        BtnSubmit.OnInteract += delegate { handleSubmit(); return false; };
+        BtnUp.OnInteract += delegate { go(up: true); return false; };
+        BtnDown.OnInteract += delegate { go(up: false); return false; };
 
         _cylinderRotations = new Quaternion[7];
         for (int i = 0; i < 7; i++)
@@ -243,6 +241,8 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     private void go(bool up)
     {
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, (up ? BtnUp : BtnDown).transform);
+
         _selectedElementOfHarmony = (_selectedElementOfHarmony + (up ? 6 : 1)) % 7;
         _rotationAnimationSteps = 30;
 
@@ -271,9 +271,14 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     private void handleSubmit()
     {
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, BtnSubmit.transform);
+
         Debug.LogFormat("[Friendship] You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
         if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == _correctElementOfHarmony)
+        {
             Module.HandlePass();
+            Audio.PlaySoundAtTransform("Yay", Module.transform);
+        }
         else
             Module.HandleStrike();
     }

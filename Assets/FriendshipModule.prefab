@@ -48,7 +48,7 @@ GameObject:
   - 23: {fileID: 2327872}
   - 114: {fileID: 11497414}
   m_Layer: 0
-  m_Name: DownBtn
+  m_Name: BtnDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ GameObject:
   - 23: {fileID: 2366968}
   - 114: {fileID: 11402510}
   m_Layer: 0
-  m_Name: SubmitBtn
+  m_Name: BtnSubmit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,7 +291,7 @@ GameObject:
   - 23: {fileID: 2315336}
   - 114: {fileID: 11467076}
   m_Layer: 0
-  m_Name: UpBtn
+  m_Name: BtnUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,7 +380,7 @@ Transform:
   m_Children:
   - {fileID: 465890}
   m_Father: {fileID: 474250}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!4 &410894
 Transform:
   m_ObjectHideFlags: 1
@@ -400,7 +400,7 @@ Transform:
   - {fileID: 433152}
   - {fileID: 423304}
   m_Father: {fileID: 474250}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!4 &413386
 Transform:
   m_ObjectHideFlags: 1
@@ -466,7 +466,7 @@ Transform:
   m_Children:
   - {fileID: 492054}
   m_Father: {fileID: 474250}
-  m_RootOrder: 9
+  m_RootOrder: 8
 --- !u!4 &430308
 Transform:
   m_ObjectHideFlags: 1
@@ -506,7 +506,7 @@ Transform:
   m_Children:
   - {fileID: 497986}
   m_Father: {fileID: 474250}
-  m_RootOrder: 6
+  m_RootOrder: 9
 --- !u!4 &452750
 Transform:
   m_ObjectHideFlags: 1
@@ -602,10 +602,10 @@ Transform:
   - {fileID: 457628}
   - {fileID: 420020}
   - {fileID: 414088}
-  - {fileID: 437684}
   - {fileID: 410894}
   - {fileID: 403906}
   - {fileID: 425910}
+  - {fileID: 437684}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &479804
@@ -748,7 +748,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5fbe4881e3d242245941f35844ed8c58, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -1112,7 +1112,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5fbe4881e3d242245941f35844ed8c58, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -1515,9 +1515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf26422c7dc06c44a17e1284e0278f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bomb: {fileID: 11489324}
   Module: {fileID: 11429752}
-  Selectable: {fileID: 11420650}
   Audio: {fileID: 11496072}
   FsScreen: {fileID: 124260}
   FsCylinder: {fileID: 189516}
@@ -1530,9 +1528,9 @@ MonoBehaviour:
   - {fileID: 10200426}
   - {fileID: 10254536}
   - {fileID: 10286692}
-  UpBtn: {fileID: 11467076}
-  DownBtn: {fileID: 11497414}
-  SubmitBtn: {fileID: 11402510}
+  BtnUp: {fileID: 11467076}
+  BtnDown: {fileID: 11497414}
+  BtnSubmit: {fileID: 11402510}
 --- !u!114 &11489324
 MonoBehaviour:
   m_ObjectHideFlags: 1
