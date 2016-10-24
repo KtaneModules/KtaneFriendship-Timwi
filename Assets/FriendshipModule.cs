@@ -166,24 +166,24 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
             friendshipSymbols.Add(new SymbolInfo { X = x, Y = y, IsRowSymbol = isRowSymbol, Symbol = fs });
         }
-        Debug.Log("Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
+        Debug.Log("[Friendship] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
 
         // Which column and row symbols should the expert disregard?
         var disregardCol = friendshipSymbols.Where(s => !s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.X == s.X)).OrderBy(s => s.X).FirstOrDefault();
         if (disregardCol == null)
             goto tryAgain;
-        Debug.LogFormat("Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray()));
+        Debug.LogFormat("[Friendship] Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray()));
 
         var disregardRow = friendshipSymbols.Where(s => s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.Y == s.Y)).OrderByDescending(s => s.Y).FirstOrDefault();
         if (disregardRow == null)
             goto tryAgain;
-        Debug.LogFormat("Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray()));
+        Debug.LogFormat("[Friendship] Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray()));
 
         // Which Elements of Harmony are at the intersections of the remaining columns and rows?
         var deducedElementsOfHarmony =
             friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).SelectMany(cs =>
             friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(rs => _grid[rs.RowOrCol][cs.RowOrCol])).ToArray();
-        Debug.Log("The potential Elements of Harmony are: " + string.Join(", ", deducedElementsOfHarmony.Select(ix => _elementsOfHarmony[ix]).ToArray()));
+        Debug.Log("[Friendship] The potential Elements of Harmony are: " + string.Join(", ", deducedElementsOfHarmony.Select(ix => _elementsOfHarmony[ix]).ToArray()));
 
         // On the bomb, display 6 wrong Elements of Harmony...
         var displayedElementsOfHarmony = new List<int>();
@@ -199,7 +199,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
         displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), _correctElementOfHarmony);
         _displayedElementsOfHarmony = displayedElementsOfHarmony.ToArray();
 
-        Debug.LogFormat("Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[_correctElementOfHarmony]);
+        Debug.LogFormat("[Friendship] Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[_correctElementOfHarmony]);
 
         for (int i = 0; i < 7; i++)
         {
@@ -238,7 +238,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     void ActivateModule()
     {
-        Debug.Log("Friendship Activated");
+        Debug.Log("[Friendship] Activated");
     }
 
     private void go(bool up)
@@ -271,7 +271,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
 
     private void handleSubmit()
     {
-        Debug.LogFormat("You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
+        Debug.LogFormat("[Friendship] You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
         if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == _correctElementOfHarmony)
             Module.HandlePass();
         else
