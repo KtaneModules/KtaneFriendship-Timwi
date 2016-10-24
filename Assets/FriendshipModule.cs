@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -200,9 +199,6 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
         displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), _correctElementOfHarmony);
         _displayedElementsOfHarmony = displayedElementsOfHarmony.ToArray();
 
-        if (!displayedElementsOfHarmony.Contains(Array.IndexOf(_elementsOfHarmony, "Open-mindedness")))
-            goto tryAgain;
-
         Debug.LogFormat("Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[_correctElementOfHarmony]);
 
         for (int i = 0; i < 7; i++)
@@ -221,8 +217,8 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
             graphic.transform.localScale = new Vector3(.0029f, .0029f, .0029f);
             graphic.AddComponent<MeshFilter>().mesh = PlaneMesh;
             var mr = graphic.AddComponent<MeshRenderer>();
-            Texture2D tex = new Texture2D(2, 2);
-            tex.LoadImage(File.ReadAllBytes(string.Format(@"D:\c\KTANE\Friendship\Manual\img\Friendship Symbol {0:00}.png", friendshipSymbol.Symbol)));
+            var tex = new Texture2D(2, 2);
+            tex.LoadImage(Friendship.FriendshipSymbols.RawBytes[friendshipSymbol.Symbol]);
             mr.material.mainTexture = tex;
             mr.material.shader = Shader.Find("Unlit/Transparent");
         }
