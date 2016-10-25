@@ -11,15 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf2299c8864afe4ab42466f546ae20d, type: 3}
   m_Name: WorkshopItem
   m_EditorClassIdentifier: 
-  WorkshopPublishedFileID: 0
+  WorkshopPublishedFileID: 786826903
   Title: Friendship
-  Description: 'The Magic of Friendship. Right there on your bomb.
-
-
-    Module created by Timwi.
-
-
-    Manual PDF: (not yet available)'
+  Description: "The Magic of Friendship \u2014 right there on your bomb!\n\nModule
+    created by Timwi.\n\nManual PDF: http://ktane.timwi.de/Friendship/Friendship.pdf\nManual
+    HTML: http://ktane.timwi.de/Friendship/Friendship.html"
   PreviewImage: {fileID: 2800000, guid: af4debe0ec6c4a34baab9dc352d67784, type: 3}
   Tags:
   - Regular Module

@@ -18,6 +18,7 @@ public class FriendshipModule : MonoBehaviour
     public GameObject FsScreen;
     public GameObject FsCylinder;
     public Mesh PlaneMesh;
+    public Light Light;
 
     public TextMesh[] ElementsOfHarmony;
     public KMSelectable BtnUp;
@@ -33,14 +34,14 @@ public class FriendshipModule : MonoBehaviour
     private int _rotationAnimationSteps;
 
     static string[] _ponyNames = new[] {
-            "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh",
-            "Bulk Biceps", "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee",
-            "Coco Pommel", "Coloratura", "Daisy", "Daring Do", "Derpy Hooves", "Diamond Tiara", "Double Diamond",
-            "Filthy Rich", "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Lotus Blossom", "Luna",
-            "Lyra Heartstrings", "Maud Pie", "Mayor Mare", "Moon Dancer", "Night Light", "Nurse Redheart", "Octavia Melody",
-            "Roseluck", "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich",
-            "Starlight Glimmer", "Sunburst", "Sunset Shimmer", "Suri Polomare", "Thunderlane", "Time Turner", "Toe Tapper",
-            "Tree Hugger", "Trenderhoof", "Trixie", "Trouble Shoes", "Twilight Velvet", "Twist", "Vinyl Scratch" };
+        "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh",
+        "Bulk Biceps", "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee",
+        "Coco Pommel", "Coloratura", "Daisy", "Daring Do", "Derpy", "Diamond Tiara", "Double Diamond",
+        "Filthy Rich", "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Luna", "Lyra Heartstrings",
+        "Maud Pie", "Mayor Mare", "Moon Dancer", "Ms. Harshwhinny", "Night Light", "Nurse Redheart", "Octavia Melody",
+        "Rose", "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich",
+        "Starlight Glimmer", "Sunburst", "Sunset Shimmer", "Suri Polomare", "Thunderlane", "Time Turner", "Toe Tapper",
+        "Tree Hugger", "Trenderhoof", "Trixie", "Trouble Shoes", "Twilight Velvet", "Twist", "Vinyl Scratch" };
 
     static string[] _elementsOfHarmony = new[] {
             "Altruism", "Amicability", "Benevolence", "Caring", "Charitableness", "Compassion", "Conscientiousness",
@@ -77,21 +78,8 @@ public class FriendshipModule : MonoBehaviour
         public int Y;
         public int Symbol;
         public bool IsRowSymbol;
-
-        public int RowOrCol
-        {
-            get
-            {
-                if (Symbol > 28)
-                    return 13 - (Symbol % 14);
-                return Symbol % 14;
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("(X={0}, Y={1}, Pony={2} ({3}))", X, Y, _ponyNames[Symbol], IsRowSymbol ? "row" : "col");
-        }
+        public int RowOrCol { get { return Symbol >= 28 ? 13 - (Symbol % 14) : Symbol % 14; } }
+        public override string ToString() { return string.Format("(X={0}, Y={1}, Pony={2} ({3}))", X, Y, _ponyNames[Symbol], IsRowSymbol ? "row" : "col"); }
     }
 
     void Start()
@@ -100,19 +88,17 @@ public class FriendshipModule : MonoBehaviour
 
         tryAgain:
 
-        // 16 × 11
+        // 13 × 9
         var allowed = @"
-###########XXXXX
-############XXXX
-############XXXX
-#############XXX
-###############X
-################
-X###############
-XXX#############
-XXXX############
-XXXX############
-XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reverse().Select(ch => ch == '#').ToArray()).ToArray();
+#########XXXX
+#########XXXX
+##########XXX
+###########XX
+#############
+XX###########
+XXX##########
+XXXX#########
+XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reverse().Select(ch => ch == '#').ToArray()).ToArray();
 
         var friendshipSymbols = new List<SymbolInfo>();
         var available = Enumerable.Range(0, 56).ToList();
@@ -210,9 +196,9 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
         {
             var graphic = new GameObject { name = _ponyNames[friendshipSymbol.Symbol] };
             graphic.transform.parent = FsScreen.transform;
-            graphic.transform.localPosition = new Vector3(friendshipSymbol.X * .029f / 3 - .072f, 0.0001f, friendshipSymbol.Y * .029f / 3 - .024f);
+            graphic.transform.localPosition = new Vector3(friendshipSymbol.X * .035f / 3 - .07f, 0.0001f, friendshipSymbol.Y * .035f / 3 - .022f);
             graphic.transform.localRotation = new Quaternion(0, 180, 0, 1);
-            graphic.transform.localScale = new Vector3(.0029f, .0029f, .0029f);
+            graphic.transform.localScale = new Vector3(.0035f, .0035f, .0035f);
             graphic.AddComponent<MeshFilter>().mesh = PlaneMesh;
             var mr = graphic.AddComponent<MeshRenderer>();
             var tex = new Texture2D(2, 2);
@@ -237,6 +223,7 @@ XXXXX###########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.R
     void ActivateModule()
     {
         Debug.Log("[Friendship] Activated");
+        Light.enabled = true;
     }
 
     private void go(bool up)
