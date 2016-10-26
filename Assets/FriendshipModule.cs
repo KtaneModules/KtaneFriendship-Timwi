@@ -18,7 +18,6 @@ public class FriendshipModule : MonoBehaviour
     public GameObject FsScreen;
     public GameObject FsCylinder;
     public Mesh PlaneMesh;
-    public Light Light;
 
     public TextMesh[] ElementsOfHarmony;
     public KMSelectable BtnUp;
@@ -50,10 +49,10 @@ public class FriendshipModule : MonoBehaviour
             "Resoluteness", "Selflessness", "Sincerity", "Solidarity", "Support", "Sympathy", "Thoughtfulness" };
 
     static float[] _elementsOfHarmonyScaleX = new[] {
-        .00125f, .00125f, .00125f, .00125f, .00110f, .00125f, .00095f,
-        .00120f, .00125f, .00125f, .00125f, .00125f, .00125f, .00125f,
-        .00125f, .00125f, .00125f, .00125f, .00125f, .00095f, .00125f,
-        .00125f, .00125f, .00125f, .00125f, .00125f, .00125f, .00105f };
+        .0050f, .0050f, .0050f, .0050f, .0044f, .0050f, .0038f,
+        .0048f, .0050f, .0050f, .0050f, .0050f, .0050f, .0050f,
+        .0050f, .0050f, .0050f, .0050f, .0050f, .0038f, .0050f,
+        .0050f, .0050f, .0050f, .0050f, .0050f, .0050f, .0042f };
 
     static int[][] _grid = new[] {
             new[] { 8, 6, 18, 9, 19, 26, 10, 2, 7, 24, 20, 13, 11, 15 },
@@ -188,7 +187,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         for (int i = 0; i < 7; i++)
         {
             ElementsOfHarmony[i].text = _elementsOfHarmony[_displayedElementsOfHarmony[i]];
-            ElementsOfHarmony[i].transform.localScale = new Vector3(_elementsOfHarmonyScaleX[_displayedElementsOfHarmony[i]], .00125f, .00125f);
+            ElementsOfHarmony[i].transform.localScale = new Vector3(_elementsOfHarmonyScaleX[_displayedElementsOfHarmony[i]], .005f, .005f);
         }
 
         // Create the GameObjects to display the friendship symbols on the module.
@@ -223,7 +222,6 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
     void ActivateModule()
     {
         Debug.Log("[Friendship] Activated");
-        Light.enabled = true;
     }
 
     private void go(bool up)
