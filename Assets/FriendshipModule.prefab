@@ -1426,7 +1426,7 @@ MonoBehaviour:
   Parent: {fileID: 0}
   Children:
   - {fileID: 11402510}
-  - {fileID: 11402510}
+  - {fileID: 0}
   - {fileID: 11467076}
   - {fileID: 11497414}
   IsPassThrough: 0
