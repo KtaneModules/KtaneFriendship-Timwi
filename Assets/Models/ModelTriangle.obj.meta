@@ -1,22 +1,17 @@
 fileFormatVersion: 2
-guid: 443b86ed4c0fc1f41a498908369eaa45
-timeCreated: 1477169559
+guid: e784f87c2ef99fa4bbdce9db4d56f054
+timeCreated: 1479423181
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: default
-    100002: //RootNode
-    100004: SelectorFrame
-    400000: default
-    400002: //RootNode
-    400004: SelectorFrame
-    2300000: default
-    2300002: SelectorFrame
-    3300000: default
-    3300002: SelectorFrame
-    4300000: default
-    4300002: SelectorFrame
+    100000: //RootNode
+    100002: Triangle
+    400000: //RootNode
+    400002: Triangle
+    2300000: Triangle
+    3300000: Triangle
+    4300000: Triangle
   materials:
     importMaterials: 1
     materialName: 0
