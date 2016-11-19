@@ -7,11 +7,21 @@ ModelImporter:
   fileIDToRecycleName:
     100000: default
     100002: //RootNode
+    100004: ScreenFrame
+    100006: ModelComponent
     400000: default
     400002: //RootNode
+    400004: ScreenFrame
+    400006: ModelComponent
     2300000: default
+    2300002: ScreenFrame
+    2300004: ModelComponent
     3300000: default
+    3300002: ScreenFrame
+    3300004: ModelComponent
     4300000: default
+    4300002: ScreenFrame
+    4300004: ModelComponent
   materials:
     importMaterials: 1
     materialName: 0
@@ -19,7 +29,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
