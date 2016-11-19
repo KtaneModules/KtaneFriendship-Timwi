@@ -226,6 +226,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
     private void go(bool up)
     {
+        (up ? BtnUp : BtnDown).AddInteractionPunch(.25f);
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, (up ? BtnUp : BtnDown).transform);
 
         _selectedElementOfHarmony = (_selectedElementOfHarmony + (up ? 6 : 1)) % 7;
@@ -256,6 +257,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
     private void handleSubmit()
     {
+        BtnSubmit.AddInteractionPunch();
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, BtnSubmit.transform);
 
         Debug.LogFormat("[Friendship] You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
