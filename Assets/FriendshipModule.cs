@@ -33,24 +33,24 @@ public class FriendshipModule : MonoBehaviour
     private int _rotationAnimationSteps;
 
     static string[] _ponyNames = new[] {
-        "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh",
-        "Bulk Biceps", "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee",
-        "Coco Pommel", "Coloratura", "Daisy", "Daring Do", "Derpy", "Diamond Tiara", "Double Diamond",
-        "Filthy Rich", "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Luna", "Lyra Heartstrings",
-        "Maud Pie", "Mayor Mare", "Moon Dancer", "Ms. Harshwhinny", "Night Light", "Nurse Redheart", "Octavia Melody",
-        "Rose", "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich",
-        "Starlight Glimmer", "Sunburst", "Sunset Shimmer", "Suri Polomare", "Thunderlane", "Time Turner", "Toe Tapper",
+        "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh", "Bulk Biceps",
+        "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee", "Coco Pommel",
+        "Coloratura", "Daisy", "Daring Do", "Derpy", "Diamond Tiara", "Double Diamond", "Filthy Rich",
+        "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Luna", "Lyra Heartstrings", "Maud Pie",
+        "Mayor Mare", "Moon Dancer", "Ms. Harshwhinny", "Night Light", "Nurse Redheart", "Octavia Melody", "Rose",
+        "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich", "Starlight Glimmer",
+        "Sunburst", "Sunset Shimmer", "Suri Polomare", "Sweetie Drops", "Thunderlane", "Time Turner", "Toe Tapper",
         "Tree Hugger", "Trenderhoof", "Trixie", "Trouble Shoes", "Twilight Velvet", "Twist", "Vinyl Scratch" };
 
     static string[] _elementsOfHarmony = new[] {
-            "Altruism", "Amicability", "Benevolence", "Caring", "Charitableness", "Compassion", "Conscientiousness",
-            "Consideration", "Courage", "Fairness", "Flexibility", "Generosity", "Helpfulness", "Honesty",
-            "Inspiration", "Kindness", "Laughter", "Love", "Loyalty", "Open-mindedness", "Patience",
+            "Altruism", "Amicability", "Authenticity", "Benevolence", "Caring", "Charitableness", "Compassion",
+            "Conscientiousness", "Consideration", "Courage", "Fairness", "Flexibility", "Generosity", "Helpfulness", "Honesty",
+            "Inspiration", "Kindness", "Laughter", "Loyalty", "Open-mindedness", "Patience",
             "Resoluteness", "Selflessness", "Sincerity", "Solidarity", "Support", "Sympathy", "Thoughtfulness" };
 
     static float[] _elementsOfHarmonyScaleX = new[] {
-        .0050f, .0050f, .0050f, .0050f, .0044f, .0050f, .0038f,
-        .0048f, .0050f, .0050f, .0050f, .0050f, .0050f, .0050f,
+        .0050f, .0050f, .0050f, .0050f, .0050f, .0044f, .0050f,
+        .0038f, .0048f, .0050f, .0050f, .0050f, .0050f, .0050f,
         .0050f, .0050f, .0050f, .0050f, .0050f, .0038f, .0050f,
         .0050f, .0050f, .0050f, .0050f, .0050f, .0050f, .0042f };
 
