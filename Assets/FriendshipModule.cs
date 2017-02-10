@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 using Rnd = UnityEngine.Random;
@@ -86,6 +87,7 @@ public class FriendshipModule : MonoBehaviour
         Module.OnActivate += ActivateModule;
 
         tryAgain:
+        var logging = new StringBuilder();
 
         // 13 × 9
         var allowed = @"
@@ -149,18 +151,20 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
             friendshipSymbols.Add(new SymbolInfo { X = x, Y = y, IsRowSymbol = isRowSymbol, Symbol = fs });
         }
-        Debug.Log("[Friendship] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
+        logging.AppendLine("[Friendship] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
 
         // Which column and row symbols should the expert disregard?
         var disregardCol = friendshipSymbols.Where(s => !s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.X == s.X)).OrderBy(s => s.X).FirstOrDefault();
         if (disregardCol == null)
             goto tryAgain;
-        Debug.LogFormat("[Friendship] Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray()));
+        logging.AppendLine(string.Format("[Friendship] Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray())));
 
         var disregardRow = friendshipSymbols.Where(s => s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.Y == s.Y)).OrderByDescending(s => s.Y).FirstOrDefault();
         if (disregardRow == null)
             goto tryAgain;
-        Debug.LogFormat("[Friendship] Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray()));
+
+        logging.AppendLine(string.Format("[Friendship] Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray())));
+        Debug.Log(logging.ToString());
 
         // Which Elements of Harmony are at the intersections of the remaining columns and rows?
         var deducedElementsOfHarmony =
