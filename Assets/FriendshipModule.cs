@@ -33,6 +33,9 @@ public class FriendshipModule : MonoBehaviour
     private Quaternion[] _cylinderRotations;
     private int _rotationAnimationSteps;
 
+    private static int _moduleIdCounter = 1;
+    private int _moduleId;
+
     static string[] _ponyNames = new[] {
         "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh", "Bulk Biceps",
         "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee", "Coco Pommel",
@@ -84,7 +87,7 @@ public class FriendshipModule : MonoBehaviour
 
     void Start()
     {
-        Module.OnActivate += ActivateModule;
+        _moduleId = _moduleIdCounter++;
 
         tryAgain:
         var logging = new StringBuilder();
@@ -151,26 +154,26 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
             friendshipSymbols.Add(new SymbolInfo { X = x, Y = y, IsRowSymbol = isRowSymbol, Symbol = fs });
         }
-        logging.AppendLine("[Friendship] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
+        logging.AppendLine("[Friendship #{0}] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
 
         // Which column and row symbols should the expert disregard?
         var disregardCol = friendshipSymbols.Where(s => !s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.X == s.X)).OrderBy(s => s.X).FirstOrDefault();
         if (disregardCol == null)
             goto tryAgain;
-        logging.AppendLine(string.Format("[Friendship] Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray())));
+        logging.AppendLine(string.Format("[Friendship #{{0}}] Disregard column symbol {0}, leaving {1}", _ponyNames[disregardCol.Symbol], string.Join(" and ", friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).Select(s => _ponyNames[s.Symbol]).ToArray())));
 
         var disregardRow = friendshipSymbols.Where(s => s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.Y == s.Y)).OrderByDescending(s => s.Y).FirstOrDefault();
         if (disregardRow == null)
             goto tryAgain;
 
-        logging.AppendLine(string.Format("[Friendship] Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray())));
-        Debug.Log(logging.ToString());
+        logging.AppendLine(string.Format("[Friendship #{{0}}] Disregard row symbol {0}, leaving {1}", _ponyNames[disregardRow.Symbol], string.Join(" and ", friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(s => _ponyNames[s.Symbol]).ToArray())));
+        Debug.LogFormat(logging.ToString(), _moduleId);
 
         // Which Elements of Harmony are at the intersections of the remaining columns and rows?
         var deducedElementsOfHarmony =
             friendshipSymbols.Where(s => !s.IsRowSymbol && s != disregardCol).SelectMany(cs =>
             friendshipSymbols.Where(s => s.IsRowSymbol && s != disregardRow).Select(rs => _grid[rs.RowOrCol][cs.RowOrCol])).ToArray();
-        Debug.Log("[Friendship] The potential Elements of Harmony are: " + string.Join(", ", deducedElementsOfHarmony.Select(ix => _elementsOfHarmony[ix]).ToArray()));
+        Debug.LogFormat("[Friendship #{0}] The potential Elements of Harmony are: {1}", _moduleId, string.Join(", ", deducedElementsOfHarmony.Select(ix => _elementsOfHarmony[ix]).ToArray()));
 
         // On the bomb, display 6 wrong Elements of Harmony...
         var displayedElementsOfHarmony = new List<int>();
@@ -186,7 +189,10 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), _correctElementOfHarmony);
         _displayedElementsOfHarmony = displayedElementsOfHarmony.ToArray();
 
-        Debug.LogFormat("[Friendship] Showing Elements of Harmony:\n{0}\n(of which {1} is correct)", string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _elementsOfHarmony[_correctElementOfHarmony]);
+        Debug.LogFormat("[Friendship #{2}] Showing Elements of Harmony:\n{0}\n(of which {1} is correct)",
+            string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()),
+            _elementsOfHarmony[_correctElementOfHarmony],
+            _moduleId);
 
         for (int i = 0; i < 7; i++)
         {
@@ -221,11 +227,6 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             FsCylinder.transform.Rotate(new Vector3(360f / 7, 0, 0));
         }
         FsCylinder.transform.localRotation = _cylinderRotations[0];
-    }
-
-    void ActivateModule()
-    {
-        Debug.Log("[Friendship] Activated");
     }
 
     private void go(bool up)
@@ -264,7 +265,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         BtnSubmit.AddInteractionPunch();
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, BtnSubmit.transform);
 
-        Debug.LogFormat("[Friendship] You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony]);
+        Debug.LogFormat("[Friendship #{2}] You selected {0}; correct is {1}.", _elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], _elementsOfHarmony[_correctElementOfHarmony], _moduleId);
         if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == _correctElementOfHarmony)
         {
             Module.HandlePass();
