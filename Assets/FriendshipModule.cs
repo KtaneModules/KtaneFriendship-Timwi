@@ -154,7 +154,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
             friendshipSymbols.Add(new SymbolInfo { X = x, Y = y, IsRowSymbol = isRowSymbol, Symbol = fs });
         }
-        logging.AppendLine("[Friendship #{0}] Friendship symbols:\n" + string.Join("\n", friendshipSymbols.Select(s => s.ToString()).ToArray()));
+        for (int i = 0; i < friendshipSymbols.Count; i++)
+            logging.AppendLine(string.Format("[Friendship #{{0}}] Friendship symbol #{0}: {1}", i + 1, friendshipSymbols[i]));
 
         // Which column and row symbols should the expert disregard?
         var disregardCol = friendshipSymbols.Where(s => !s.IsRowSymbol && !friendshipSymbols.Any(s2 => s2 != s && s2.X == s.X)).OrderBy(s => s.X).FirstOrDefault();
@@ -189,10 +190,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         displayedElementsOfHarmony.Insert(Rnd.Range(0, displayedElementsOfHarmony.Count + 1), _correctElementOfHarmony);
         _displayedElementsOfHarmony = displayedElementsOfHarmony.ToArray();
 
-        Debug.LogFormat("[Friendship #{2}] Showing Elements of Harmony:\n{0}\n(of which {1} is correct)",
-            string.Join("\n", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()),
-            _elementsOfHarmony[_correctElementOfHarmony],
-            _moduleId);
+        Debug.LogFormat("[Friendship #{1}] Showing Elements of Harmony: {0}", string.Join(", ", _displayedElementsOfHarmony.Select(d => _elementsOfHarmony[d]).ToArray()), _moduleId);
+        Debug.LogFormat("[Friendship #{1}] Correct Element of Harmony: {0}", _elementsOfHarmony[_correctElementOfHarmony], _moduleId);
 
         for (int i = 0; i < 7; i++)
         {
