@@ -273,4 +273,47 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         else
             Module.HandleStrike();
     }
+
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        switch (command)
+        {
+            case "cycle":
+                for (int i = 0; i < 7; i++)
+                {
+                    if (i > 0)
+                        yield return new WaitForSeconds(1f);
+                    yield return BtnDown;
+                    yield return new WaitForSeconds(.1f);
+                    yield return BtnDown;
+                }
+                break;
+
+            default:
+                var index = -1;
+                for (int i = 0; i < _elementsOfHarmony.Length; i++)
+                    if (_elementsOfHarmony[i].Equals(command, StringComparison.OrdinalIgnoreCase))
+                        index = i;
+                if (index == -1)
+                    yield break;
+                for (int i = 0; i < 7; i++)
+                {
+                    if (i > 0)
+                    {
+                        yield return BtnDown;
+                        yield return new WaitForSeconds(.1f);
+                        yield return BtnDown;
+                    }
+
+                    if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == index)
+                    {
+                        yield return BtnSubmit;
+                        yield return new WaitForSeconds(.1f);
+                        yield return BtnSubmit;
+                        yield break;
+                    }
+                }
+                break;
+        }
+    }
 }
