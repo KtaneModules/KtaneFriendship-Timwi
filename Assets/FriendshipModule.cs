@@ -276,44 +276,46 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
     IEnumerator ProcessTwitchCommand(string command)
     {
-        switch (command)
+        var stuff = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        if (stuff.Length == 1 && stuff[0] == "cycle")
         {
-            case "cycle":
-                for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
+            {
+                if (i > 0)
+                    yield return new WaitForSeconds(1f);
+                yield return BtnDown;
+                yield return new WaitForSeconds(.1f);
+                yield return BtnDown;
+            }
+        }
+        else if (stuff.Length >= 2 && stuff[0] == "submit")
+        {
+            if (stuff.Skip(1).Any(str => !_elementsOfHarmony.Any(eoh => eoh.Equals(str, StringComparison.InvariantCultureIgnoreCase))))
+                yield break;
+
+            for (int i = 0; i < 7; i++)
+            {
+                if (i > 0)
                 {
-                    if (i > 0)
-                        yield return new WaitForSeconds(1f);
                     yield return BtnDown;
                     yield return new WaitForSeconds(.1f);
                     yield return BtnDown;
                 }
-                break;
 
-            default:
-                var index = -1;
-                for (int i = 0; i < _elementsOfHarmony.Length; i++)
-                    if (_elementsOfHarmony[i].Equals(command, StringComparison.OrdinalIgnoreCase))
-                        index = i;
-                if (index == -1)
-                    yield break;
-                for (int i = 0; i < 7; i++)
+                var any = false;
+                for (int j = 1; j < stuff.Length; j++)
+                    if (stuff[j].Equals(_elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], StringComparison.InvariantCultureIgnoreCase))
+                        any = true;
+
+                if (any)
                 {
-                    if (i > 0)
-                    {
-                        yield return BtnDown;
-                        yield return new WaitForSeconds(.1f);
-                        yield return BtnDown;
-                    }
-
-                    if (_displayedElementsOfHarmony[_selectedElementOfHarmony] == index)
-                    {
-                        yield return BtnSubmit;
-                        yield return new WaitForSeconds(.1f);
-                        yield return BtnSubmit;
-                        yield break;
-                    }
+                    yield return BtnSubmit;
+                    yield return new WaitForSeconds(.1f);
+                    yield return BtnSubmit;
+                    yield break;
                 }
-                break;
+            }
         }
     }
 }
