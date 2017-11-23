@@ -24,11 +24,11 @@ public class FriendshipModule : MonoBehaviour
     public KMSelectable BtnUp;
     public KMSelectable BtnDown;
     public KMSelectable BtnSubmit;
+    public Texture[] FriendshipSymbols;
 
     private int _correctElementOfHarmony;
     private int _selectedElementOfHarmony = 0;
     private bool _isCoroutineRunning = false;
-    private bool _isCylinderMovingUp;
     private int[] _displayedElementsOfHarmony;
     private Quaternion[] _cylinderRotations;
     private int _rotationAnimationSteps;
@@ -209,9 +209,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             graphic.transform.localScale = new Vector3(.0035f, .0035f, .0035f);
             graphic.AddComponent<MeshFilter>().mesh = PlaneMesh;
             var mr = graphic.AddComponent<MeshRenderer>();
-            var tex = new Texture2D(2, 2);
-            tex.LoadImage(Friendship.FriendshipSymbols.RawBytes[friendshipSymbol.Symbol]);
-            mr.material.mainTexture = tex;
+            mr.material.mainTexture = FriendshipSymbols.First(fs => fs.name == "Friendship Symbol " + friendshipSymbol.Symbol.ToString("00"));
             mr.material.shader = Shader.Find("Unlit/Transparent");
         }
 
