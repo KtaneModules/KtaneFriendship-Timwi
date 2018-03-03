@@ -31,10 +31,11 @@ public class FriendshipModule : MonoBehaviour
     private bool _isCoroutineRunning = false;
     private int[] _displayedElementsOfHarmony;
     private Quaternion[] _cylinderRotations;
-    private int _rotationAnimationSteps;
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
+
+    const float _rotationAnimationDuration = .5f;
 
     static string[] _ponyNames = new[] {
         "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh", "Bulk Biceps",
@@ -230,31 +231,39 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
     {
         (up ? BtnUp : BtnDown).AddInteractionPunch(.25f);
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, (up ? BtnUp : BtnDown).transform);
-
         _selectedElementOfHarmony = (_selectedElementOfHarmony + (up ? 6 : 1)) % 7;
-        _rotationAnimationSteps = 30;
 
         if (!_isCoroutineRunning)
-        {
-            _isCoroutineRunning = true;
             StartCoroutine(cylinderRotation());
-        }
+    }
+
+    private float easeOutSine(float time, float duration, float from, float to)
+    {
+        return (to - from) * Mathf.Sin(time / duration * (Mathf.PI / 2)) + from;
     }
 
     private IEnumerator cylinderRotation()
     {
-        while (true)
+        _isCoroutineRunning = true;
+        var rotationStart = FsCylinder.transform.localRotation;
+        var elapsed = 0f;
+        var selectionStart = _selectedElementOfHarmony;
+        while (elapsed < _rotationAnimationDuration)
         {
-            if (--_rotationAnimationSteps == 0)
+            yield return null;
+
+            if (_selectedElementOfHarmony != selectionStart)
             {
-                FsCylinder.transform.localRotation = _cylinderRotations[_selectedElementOfHarmony];
-                _isCoroutineRunning = false;
-                yield break;
+                selectionStart = _selectedElementOfHarmony;
+                rotationStart = FsCylinder.transform.localRotation;
+                elapsed = 0;
             }
 
-            FsCylinder.transform.localRotation = Quaternion.Slerp(FsCylinder.transform.localRotation, _cylinderRotations[_selectedElementOfHarmony], .25f);
-            yield return null;
+            elapsed += Time.deltaTime;
+            FsCylinder.transform.localRotation = Quaternion.Slerp(rotationStart, _cylinderRotations[_selectedElementOfHarmony], easeOutSine(elapsed, _rotationAnimationDuration, 0, 1));
         }
+        FsCylinder.transform.localRotation = _cylinderRotations[_selectedElementOfHarmony];
+        _isCoroutineRunning = false;
     }
 
     private void handleSubmit()
