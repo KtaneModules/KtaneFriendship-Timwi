@@ -281,12 +281,17 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             Module.HandleStrike();
     }
 
+#pragma warning disable 414
+    private string TwitchHelpMessage = @"Submit the desired Element of Harmony with “!{0} submit Fairness Conscientiousness Kindness Authenticity”.";
+#pragma warning restore 414
+
     IEnumerator ProcessTwitchCommand(string command)
     {
-        var stuff = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var pieces = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-        if (stuff.Length == 1 && stuff[0] == "cycle")
+        if (pieces.Length == 1 && pieces[0] == "cycle")
         {
+            yield return null;
             for (int i = 0; i < 7; i++)
             {
                 if (i > 0)
@@ -296,10 +301,17 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 yield return BtnDown;
             }
         }
-        else if (stuff.Length >= 2 && stuff[0] == "submit")
+        else if (pieces.Length >= 2 && pieces[0] == "submit")
         {
-            if (stuff.Skip(1).Any(str => !_elementsOfHarmony.Any(eoh => eoh.Equals(str, StringComparison.InvariantCultureIgnoreCase))))
+            yield return null;
+
+            var faulty = pieces.Skip(1).FirstOrDefault(str => !_elementsOfHarmony.Any(eoh => eoh.Equals(str, StringComparison.InvariantCultureIgnoreCase)));
+            if (faulty != null)
+            {
+                yield return string.Format("sendtochat Dear Princess Celestia, today I learned that “{0}” is a new Element of Harmony. Your faithful student, Twilight Sparkle", faulty);
+                yield return string.Format("sendtochat Dear Twilight Sparkle, it does seem that you are mistaken. The 28 Elements of Harmony are: {0}. Your mentor, Princess Celestia", string.Join(", ", _elementsOfHarmony));
                 yield break;
+            }
 
             for (int i = 0; i < 7; i++)
             {
@@ -311,17 +323,18 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 }
 
                 var any = false;
-                for (int j = 1; j < stuff.Length; j++)
-                    if (stuff[j].Equals(_elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], StringComparison.InvariantCultureIgnoreCase))
+                for (int j = 1; j < pieces.Length; j++)
+                    if (pieces[j].Equals(_elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], StringComparison.InvariantCultureIgnoreCase))
                         any = true;
 
-                if (any)
+                if (!any)
                 {
-                    yield return BtnSubmit;
-                    yield return new WaitForSeconds(.1f);
-                    yield return BtnSubmit;
+                    yield return "unsubmittablepenalty";
                     yield break;
                 }
+
+                yield return new WaitForSeconds(1f);
+                BtnSubmit.OnInteract();
             }
         }
     }
