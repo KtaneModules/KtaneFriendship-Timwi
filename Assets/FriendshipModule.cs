@@ -317,25 +317,19 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             {
                 if (i > 0)
                 {
-                    yield return BtnDown;
-                    yield return new WaitForSeconds(.1f);
-                    yield return BtnDown;
+                    BtnDown.OnInteract();
+                    yield return new WaitForSeconds(.25f);
                 }
 
-                var any = false;
-                for (int j = 1; j < pieces.Length; j++)
-                    if (pieces[j].Equals(_elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], StringComparison.InvariantCultureIgnoreCase))
-                        any = true;
-
-                if (!any)
+                if (pieces.Skip(1).Any(p => p.Equals(_elementsOfHarmony[_displayedElementsOfHarmony[_selectedElementOfHarmony]], StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    yield return "unsubmittablepenalty";
+                    yield return new WaitForSeconds(.25f);
+                    BtnSubmit.OnInteract();
                     yield break;
                 }
-
-                yield return new WaitForSeconds(1f);
-                BtnSubmit.OnInteract();
             }
+
+            yield return "unsubmittablepenalty";
         }
     }
 }
