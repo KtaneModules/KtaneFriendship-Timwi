@@ -287,7 +287,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
     IEnumerator ProcessTwitchCommand(string command)
     {
-        var pieces = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var pieces = command.ToLowerInvariant().Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
         if (pieces.Length == 1 && pieces[0] == "cycle")
         {
