@@ -18,6 +18,7 @@ public class FriendshipModule : MonoBehaviour
 
     public GameObject FsScreen;
     public GameObject FsCylinder;
+    public MeshRenderer FsTemplate;
     public Mesh PlaneMesh;
 
     public TextMesh[] ElementsOfHarmony;
@@ -203,16 +204,15 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         // Create the GameObjects to display the friendship symbols on the module.
         foreach (var friendshipSymbol in friendshipSymbols)
         {
-            var graphic = new GameObject { name = _ponyNames[friendshipSymbol.Symbol] };
+            var graphic = Instantiate(FsTemplate);
+            graphic.name = _ponyNames[friendshipSymbol.Symbol];
             graphic.transform.parent = FsScreen.transform;
             graphic.transform.localPosition = new Vector3(friendshipSymbol.X * .035f / 3 - .07f, 0.0001f, friendshipSymbol.Y * .035f / 3 - .022f);
-            graphic.transform.localRotation = new Quaternion(0, 180, 0, 1);
-            graphic.transform.localScale = new Vector3(.0035f, .0035f, .0035f);
-            graphic.AddComponent<MeshFilter>().mesh = PlaneMesh;
-            var mr = graphic.AddComponent<MeshRenderer>();
-            mr.material.mainTexture = FriendshipSymbols.First(fs => fs.name == "Friendship Symbol " + friendshipSymbol.Symbol.ToString("00"));
-            mr.material.shader = Shader.Find("Unlit/Transparent");
+            graphic.transform.localEulerAngles = new Vector3(90, 0, 0);
+            graphic.transform.localScale = new Vector3(.035f, .035f, .035f);
+            graphic.material.mainTexture = FriendshipSymbols.First(fs => fs.name == "Friendship Symbol " + friendshipSymbol.Symbol.ToString("00"));
         }
+        Destroy(FsTemplate.gameObject);
 
         BtnSubmit.OnInteract += delegate { handleSubmit(); return false; };
         BtnUp.OnInteract += delegate { go(up: true); return false; };
