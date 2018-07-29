@@ -1685,6 +1685,7 @@ GameObject:
   - component: {fileID: 4867400369464922}
   - component: {fileID: 23605510601843584}
   - component: {fileID: 33145497820167604}
+  - component: {fileID: 114991097389163496}
   m_Layer: 0
   m_Name: FriendshipSymbolTemplate
   m_TagString: Untagged
@@ -1967,6 +1968,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - Legacy Shaders/Diffuse
+--- !u!114 &114991097389163496
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1526363549709130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Transparent
 --- !u!135 &135000013283041210
 SphereCollider:
   m_ObjectHideFlags: 1
