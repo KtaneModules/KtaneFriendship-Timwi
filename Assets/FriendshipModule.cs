@@ -151,6 +151,8 @@ public class FriendshipModule : MonoBehaviour
         _moduleId = _moduleIdCounter++;
 
         var rnd = RuleSeedable.GetRNG();
+        Debug.LogFormat("[Friendship #{0}] Using rule seed: {1}", _moduleId, rnd.Seed);
+
         // Add extra randomess
         for (var i = rnd.Next(0, 10); i > 0; i--)
             rnd.NextDouble();
