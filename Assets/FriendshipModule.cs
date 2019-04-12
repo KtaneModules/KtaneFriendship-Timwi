@@ -37,6 +37,7 @@ public class FriendshipModule : MonoBehaviour
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
+    private bool _isSolved;
 
     const float _rotationAnimationDuration = .5f;
 
@@ -346,6 +347,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
     {
         BtnSubmit.AddInteractionPunch();
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, BtnSubmit.transform);
+        if (_isSolved)
+            return;
 
         Debug.LogFormat("[Friendship #{2}] You selected {0}; correct is {1}.", _displayedElementsOfHarmony[_selectedElementOfHarmonyIndex], _displayedElementsOfHarmony[_correctElementOfHarmonyIndex], _moduleId);
         if (_selectedElementOfHarmonyIndex == _correctElementOfHarmonyIndex)
@@ -353,6 +356,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             Debug.LogFormat("[Friendship #{0}] Yay!", _moduleId);
             Module.HandlePass();
             Audio.PlaySoundAtTransform("Yay", Module.transform);
+            _isSolved = true;
         }
         else
             Module.HandleStrike();
