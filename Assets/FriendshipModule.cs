@@ -314,11 +314,6 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             StartCoroutine(cylinderRotation());
     }
 
-    private float easeOutSine(float time, float duration, float from, float to)
-    {
-        return (to - from) * Mathf.Sin(time / duration * (Mathf.PI / 2)) + from;
-    }
-
     private IEnumerator cylinderRotation()
     {
         _isCoroutineRunning = true;
@@ -337,7 +332,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             }
 
             elapsed += Time.deltaTime;
-            FsCylinder.transform.localRotation = Quaternion.Slerp(rotationStart, _cylinderRotations[_selectedElementOfHarmonyIndex], easeOutSine(elapsed, _rotationAnimationDuration, 0, 1));
+            FsCylinder.transform.localRotation = Quaternion.Slerp(rotationStart, _cylinderRotations[_selectedElementOfHarmonyIndex], Easing.OutSine(elapsed, 0, 1, _rotationAnimationDuration));
         }
         FsCylinder.transform.localRotation = _cylinderRotations[_selectedElementOfHarmonyIndex];
         _isCoroutineRunning = false;
