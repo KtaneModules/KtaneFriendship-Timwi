@@ -9,7 +9,6 @@
 .vs/
 ExportedObj/
 *.unityproj
-*.sln
 *.suo
 *.tmp
 *.user
