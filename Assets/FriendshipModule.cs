@@ -408,4 +408,14 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             yield return "unsubmittablepenalty";
         }
     }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (_selectedElementOfHarmonyIndex != _correctElementOfHarmonyIndex)
+        {
+            BtnUp.OnInteract();
+            yield return new WaitForSeconds(.1f);
+        }
+        BtnSubmit.OnInteract();
+    }
 }
